@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Old Heritage RP · Lista de Vehículos Prohibidos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #020617;
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 20%, rgba(168,85,247,0.25), transparent 40%),
+                  radial-gradient(circle at 80% 30%, rgba(168,85,247,0.2), transparent 40%),
+                  radial-gradient(circle at 50% 80%, rgba(168,85,247,0.15), transparent 50%);
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    .app-container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    .hero {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .hero-logo {
+      flex-shrink: 0;
+      line-height: 0;
+    }
+    .logo-img {
+      display: block;
+      max-height: 64px;
+      width: auto;
+      filter: drop-shadow(0 4px 12px rgba(168,85,247,0.4));
+      transition: filter 0.2s ease;
+    }
+    .logo-img:hover {
+      filter: drop-shadow(0 6px 16px rgba(168,85,247,0.6));
+    }
+
+    .hero-text {
+      border-left: 4px solid #a855f7;
+      padding-left: 1.2rem;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    h1 {
+      font-size: clamp(28px, 6vw, 48px);
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff, #c084fc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+      margin-bottom: 0.5rem;
+    }
+    .sub {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      border-left: 1px solid rgba(168,85,247,0.4);
+      padding-left: 1rem;
+      margin-left: 0rem;
+    }
+
+    .search-panel {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 32px;
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      align-items: flex-end;
+    }
+    .filter-group {
+      flex: 1;
+      min-width: 180px;
+    }
+    .filter-group label {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      color: #a855f7;
+      margin-bottom: 0.4rem;
+    }
+    .filter-group select, .filter-group input {
+      width: 100%;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(168,85,247,0.4);
+      border-radius: 20px;
+      padding: 0.7rem 1rem;
+      color: #f1f5f9;
+      font-family: 'Inter', monospace;
+      font-size: 0.9rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    .filter-group select:focus, .filter-group input:focus {
+      border-color: #c084fc;
+      box-shadow: 0 0 6px rgba(168,85,247,0.6);
+    }
+    .reset-btn {
+      background: rgba(168,85,247,0.2);
+      border: 1px solid #a855f7;
+      border-radius: 40px;
+      padding: 0.7rem 1.6rem;
+      font-weight: 600;
+      color: #c084fc;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.85rem;
+      height: fit-content;
+    }
+    .reset-btn:hover {
+      background: #a855f7;
+      color: #0f0f1f;
+      border-color: #a855f7;
+      box-shadow: 0 0 10px #a855f7;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      margin-bottom: 1.2rem;
+      padding: 0 0.5rem;
+    }
+    .count-badge {
+      background: rgba(168,85,247,0.25);
+      border-radius: 40px;
+      padding: 0.3rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #c084fc;
+    }
+    .ban-icon {
+      background: #7f1a1a;
+      border-radius: 20px;
+      padding: 0.2rem 0.7rem;
+      font-size: 0.7rem;
+      font-weight: bold;
+      color: #ff9999;
+      border: 1px solid #ef4444;
+    }
+
+    .vehicle-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+    }
+    .vehicle-card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 28px;
+      padding: 1.2rem 1.4rem;
+      transition: all 0.25s ease;
+      border-left: 4px solid #a855f7;
+    }
+    .vehicle-card:hover {
+      transform: translateY(-4px);
+      background: rgba(30, 41, 59, 0.7);
+      box-shadow: 0 20px 25px -12px rgba(0,0,0,0.5);
+      border-left-width: 5px;
+    }
+    .vehicle-brand {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+      color: #a855f7;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .vehicle-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      word-break: break-word;
+      margin-bottom: 0.6rem;
+      line-height: 1.3;
+    }
+    .vehicle-year {
+      display: inline-block;
+      background: rgba(168,85,247,0.2);
+      border-radius: 40px;
+      padding: 0.2rem 0.8rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #d9b4ff;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .vehicle-variant {
+      display: inline-block;
+      background: #7f1a1a;
+      border-radius: 40px;
+      padding: 0.2rem 0.8rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #ff9999;
+      border: 1px solid #ef4444;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .tags-container {
+      margin-top: 0.6rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .no-results {
+      text-align: center;
+      padding: 3rem;
+      background: rgba(0,0,0,0.3);
+      border-radius: 40px;
+      color: #94a3b8;
+      font-style: italic;
+      border: 1px dashed #a855f7;
+    }
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #475569;
+      border-top: 1px solid rgba(168,85,247,0.3);
+      padding-top: 1.5rem;
+    }
+    @media (max-width: 700px) {
+      .app-container { padding: 1rem; }
+      .hero {
+        justify-content: center;
+        text-align: center;
+      }
+      .hero-text {
+        text-align: left;
+      }
+      .search-panel { flex-direction: column; align-items: stretch; }
+      .reset-btn { align-self: center; width: fit-content; }
+      .vehicle-grid { grid-template-columns: 1fr; }
+      .logo-img { max-height: 48px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <div class="hero">
+    <div class="hero-logo">
+      <img src="icono.png" alt="Old Heritage RP" class="logo-img" onerror="this.style.opacity='0.5';">
+    </div>
+    <div class="hero-text">
+      <h1>LISTA DE VEHÍCULOS PROHIBIDOS</h1>
+      <div class="sub">Old Heritage RP · Modelos baneados oficialmente</div>
+    </div>
+  </div>
+
+  <div class="search-panel">
+    <div class="filter-group">
+      <label>🏭 MARCA</label>
+      <select id="brandFilter">
+        <option value="all">Todas las marcas (orden alfabético)</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>🔍 MODELO O VERSIÓN</label>
+      <input type="text" id="modelSearch" placeholder="Ej: R8, Determinator, SFP Blackjack..." autocomplete="off">
+    </div>
+    <div class="filter-group">
+      <label>📅 AÑO EXACTO</label>
+      <input type="number" id="yearFilter" placeholder="Ej: 2023" step="1" min="1900" max="2030">
+    </div>
+    <button class="reset-btn" id="resetFilters">⟳ Limpiar filtros</button>
+  </div>
+
+  <div class="stats">
+    <span class="count-badge" id="resultCount">Cargando...</span>
+    <span class="count-badge"><span class="ban-icon">PROHIBIDO</span> · Lista oficial</span>
+  </div>
+
+  <div id="vehiclesContainer" class="vehicle-grid">
+    <div class="no-results">Cargando lista negra...</div>
+  </div>
+  <footer>© Old Heritage RP — Estos vehículos tienen prohibida su circulación. Cualquier uso conlleva sanciones administrativas.</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // LISTA DEFINITIVA DE COCHES PROHIBIDOS
+  // TOTAL: 190 MODELOS
+  // --------------------------------------------------------------
+  const vehiclesData = [
+    // ARROW (1)
+    { brand: "ARROW", year: 1988, name: "Phoenix Dimensional Traveler", variants: [] },
+    // AUDI (4)
+    { brand: "AUDI", year: 2021, name: "R8 V10 Spyder", variants: [] },
+    { brand: "AUDI", year: 2024, name: "RS 7", variants: [] },
+    { brand: "AUDI", year: 2025, name: "RS 6 AVANT", variants: [] },
+    { brand: "AUDI", year: 2025, name: "RS Q8", variants: [] },
+    // BANDIT (5)
+    { brand: "BANDIT", year: 2023, name: "Advance Beast Rawr Taur 6X6", variants: [] },
+    { brand: "BANDIT", year: 2023, name: "Advance Beast Rawr Baja", variants: [] },
+    { brand: "BANDIT", year: 2023, name: "Advance Bellco SS", variants: [] },
+    { brand: "BANDIT", year: 2023, name: "Advance Bellco 800", variants: [] },
+    { brand: "BANDIT", year: 2023, name: "Advance Bellco 800 SS", variants: [] },
+    // BARCHETTA (2)
+    { brand: "BARCHETTA", year: 2022, name: "Chiave", variants: ["Trofeo", "Trofeo Champ", "Modena S"] },
+    { brand: "BARCHETTA", year: 2023, name: "Corsica", variants: [] },
+    // BAYRO (20)
+    { brand: "BAYRO", year: 1981, name: "W10", variants: [] },
+    { brand: "BAYRO", year: 2007, name: "Hofmeister M", variants: ["M Touring EU"] },
+    { brand: "BAYRO", year: 2018, name: "Regen M", variants: ["Competitive"] },
+    { brand: "BAYRO", year: 2020, name: "Hofmeister M", variants: ["M Competitive"] },
+    { brand: "BAYRO", year: 2020, name: "Series 30 'Teenage Dream'", variants: [] },
+    { brand: "BAYRO", year: 2021, name: "Donner M Convertible", variants: [] },
+    { brand: "BAYRO", year: 2021, name: "Donner M Coupe", variants: [] },
+    { brand: "BAYRO", year: 2021, name: "Regen M", variants: [] },
+    { brand: "BAYRO", year: 2021, name: "Gottfrieding", variants: ["AWD 6.6TT M Performance", "AWD 6.6TT M Performance Shadow Edition"] },
+    { brand: "BAYRO", year: 2021, name: "W30", variants: [] },
+    { brand: "BAYRO", year: 2021, name: "W30 Wagon", variants: [] },
+    { brand: "BAYRO", year: 2022, name: "W40", variants: [] },
+    { brand: "BAYRO", year: 2022, name: "Hofmeister M", variants: ["M Competitive", "M Competitive Sport"] },
+    { brand: "BAYRO", year: 2023, name: "Regen M Touring", variants: [] },
+    { brand: "BAYRO", year: 2024, name: "eWX", variants: [] },
+    { brand: "BAYRO", year: 2024, name: "e70", variants: [] },
+    { brand: "BAYRO", year: 2024, name: "W70", variants: [] },
+    { brand: "BAYRO", year: 2025, name: "Y50 W", variants: [] },
+    { brand: "BAYRO", year: 2025, name: "Y60 W", variants: [] },
+    // BULLHORN (13)
+    { brand: "BULLHORN", year: 1969, name: "Canaveral Champion", variants: [] },
+    { brand: "BULLHORN", year: 1969, name: "Prancer", variants: ["Canaveral"] },
+    { brand: "BULLHORN", year: 2008, name: "Python", variants: [] },
+    { brand: "BULLHORN", year: 2017, name: "SFP Python", variants: [] },
+    { brand: "BULLHORN", year: 2018, name: "Buffalo SFP-10", variants: [] },
+    { brand: "BULLHORN", year: 2018, name: "Buffalo SFP-1750TT", variants: [] },
+    { brand: "BULLHORN", year: 2021, name: "Determinator", variants: ["SFP Blackjack", "SFP Fury", "SFP Blackjack Widebody", "SFP Fury Widebody"] },
+    { brand: "BULLHORN", year: 2021, name: "Pueblo SFP", variants: [] },
+    { brand: "BULLHORN", year: 2022, name: "Buffalo T-Wex", variants: [] },
+    { brand: "BULLHORN", year: 2022, name: "Buffalo K-Wex", variants: [] },
+    { brand: "BULLHORN", year: 2023, name: "Prancer", variants: ["SFP Blackjack Widebody", "SFP Fury Widebody", "SFP Fury", "SPF Fury Redeye", "BlackJack WideBody"] },
+    { brand: "BULLHORN", year: 2023, name: "Determinator", variants: ["SFP Fury", "SFP Fury Widebody", "Super Stock", "SFP Fury Redeye", "SFP Fury Redeye Widebody", "Nightmare"] },
+    { brand: "BULLHORN", year: 2023, name: "Determinator 170", variants: [] },
+    // CELESTIAL (10)
+    { brand: "CELESTIAL", year: 2021, name: "Type-5", variants: ["Plaid", "Plaid+"] },
+    { brand: "CELESTIAL", year: 2021, name: "Type-7", variants: ["Plaid"] },
+    { brand: "CELESTIAL", year: 2022, name: "Type-7", variants: ["Surge", "Surge Ivy"] },
+    { brand: "CELESTIAL", year: 2022, name: "Type-5", variants: ["Surge"] },
+    { brand: "CELESTIAL", year: 2022, name: "Type-5 'Reactive Series'", variants: [] },
+    { brand: "CELESTIAL", year: 2023, name: "FCT", variants: [] },
+    { brand: "CELESTIAL", year: 2023, name: "Type-1", variants: [] },
+    { brand: "CELESTIAL", year: 2025, name: "Type-FT FX-Edition", variants: [] },
+    { brand: "CELESTIAL", year: 2025, name: "Type-5", variants: ["Surge", "Surge Track Pack"] },
+    { brand: "CELESTIAL", year: 2025, name: "Type-7", variants: ["Surge Ivy", "Surge"] },
+    // CENTURY (2)
+    { brand: "CENTURY", year: 2023, name: "Activa 600", variants: [] },
+    { brand: "CENTURY", year: 2023, name: "Nebula 500", variants: ["500 Track Package", "500 Carbon Package"] },
+    // CHEVLON (8)
+    { brand: "CHEVLON", year: 2002, name: "Corbeta", variants: ["Z06", "Tigershark"] },
+    { brand: "CHEVLON", year: 2017, name: "Guardian", variants: ["SS Oppressor"] },
+    { brand: "CHEVLON", year: 2019, name: "Corbeta", variants: ["Manta TZ", "Manta RS"] },
+    { brand: "CHEVLON", year: 2021, name: "Arrojo", variants: ["TZ", "TZR"] },
+    { brand: "CHEVLON", year: 2023, name: "Corbeta Manta", variants: [] },
+    { brand: "CHEVLON", year: 2023, name: "Corbeta Manta HEEN", variants: [] },
+    { brand: "CHEVLON", year: 2023, name: "Corbeta Manta Z06", variants: [] },
+    { brand: "CHEVLON", year: 2024, name: "Corbeta Manta t-Hay", variants: [] },
+    // CHIARA (3)
+    { brand: "CHIARA", year: 1962, name: "Chiara Berlinetta GT", variants: [] },
+    { brand: "CHIARA", year: 2024, name: "Chiara Vincenzo", variants: [] },
+    { brand: "CHIARA", year: 2024, name: "Chiara 006", variants: [] },
+    // COLIN (1)
+    { brand: "COLIN", year: 2024, name: "Commander", variants: [] },
+    // DOGG (2)
+    { brand: "DOGG", year: 2019, name: "Manta H1000", variants: [] },
+    { brand: "DOGG", year: 2023, name: "Amigo DOGG D1000", variants: [] },
+    // DURANT (4)
+    { brand: "DURANT", year: 2019, name: "Manta", variants: [] },
+    { brand: "DURANT", year: 2019, name: "H1300", variants: [] },
+    { brand: "DURANT", year: 2020, name: "Voyager", variants: [] },
+    { brand: "DURANT", year: 2023, name: "Amigo", variants: ["Sport R", "TL1", "TZ", "TZR"] },
+    // EEEZEE (1)
+    { brand: "EEEZEE", year: 2008, name: "Ziggy", variants: [] },
+    // ELEKTRISK (1)
+    { brand: "ELEKTRISK", year: 2025, name: "Pluto", variants: [] },
+    // FALCON (3)
+    { brand: "FALCON", year: 2005, name: "Heritage", variants: [] },
+    { brand: "FALCON", year: 2017, name: "Stallion", variants: ["Bellco GT350", "GT350R"] },
+    { brand: "FALCON", year: 2024, name: "Stallion", variants: ["Darkhorse"] },
+    // FERDINAND (10)
+    { brand: "FERDINAND", year: 2006, name: "Ultima", variants: [] },
+    { brand: "FERDINAND", year: 2007, name: "Ultima", variants: [] },
+    { brand: "FERDINAND", year: 2017, name: "Rapido", variants: [] },
+    { brand: "FERDINAND", year: 2022, name: "Rapido GT3", variants: [] },
+    { brand: "FERDINAND", year: 2022, name: "Rapido Coupe", variants: [] },
+    { brand: "FERDINAND", year: 2023, name: "Snapper", variants: [] },
+    { brand: "FERDINAND", year: 2023, name: "Snapper GT4", variants: [] },
+    { brand: "FERDINAND", year: 2023, name: "Vivo", variants: [] },
+    { brand: "FERDINAND", year: 2023, name: "Vivo CrossWagen", variants: [] },
+    { brand: "FERDINAND", year: 2023, name: "Vivo GranWagen", variants: [] },
+    // FOX MOUNTAIN (5)
+    { brand: "FOX MOUNTAIN", year: null, name: "Ranger", variants: [] },
+    { brand: "FOX MOUNTAIN", year: null, name: "4x4", variants: [] },
+    { brand: "FOX MOUNTAIN", year: null, name: "Vertex", variants: [] },
+    { brand: "FOX MOUNTAIN", year: null, name: "SLK-6789", variants: [] },
+    { brand: "FOX MOUNTAIN", year: null, name: "Dust", variants: [] },
+    // GLOBE (2)
+    { brand: "GLOBE", year: 1996, name: "City AeroPod", variants: [] },
+    { brand: "GLOBE", year: 1996, name: "City MegaCity Super Limo 2000", variants: [] },
+    // IDEA (1)
+    { brand: "IDEA", year: 2015, name: "Twofer Milkjug", variants: [] },
+    // JAGUAR (2)
+    { brand: "JAGUAR", year: 1994, name: "Jaguar XJ220", variants: [] },
+    { brand: "JAGUAR", year: 2013, name: "Jaguar KK", variants: [] },
+    // LAWN-KING (2)
+    { brand: "LAWN-KING", year: 2014, name: "G50X", variants: [] },
+    { brand: "LAWN-KING", year: 2025, name: "G50X Super Bagger", variants: [] },
+    // LELAND (3)
+    { brand: "LELAND", year: 2019, name: "Leland LCS-V", variants: [] },
+    { brand: "LELAND", year: 2023, name: "LTS5 V", variants: ["V-Series Blackwing variants"] },
+    { brand: "LELAND", year: 2023, name: "LTS5 V HEEN H1000", variants: [] },
+    // LOTUS (2)
+    { brand: "LOTUS", year: 2020, name: "Evora", variants: [] },
+    { brand: "LOTUS", year: 2024, name: "Emira", variants: [] },
+    // MARLIN MOTORS (10)
+    { brand: "MARLIN MOTORS", year: 2010, name: "GTS", variants: [] },
+    { brand: "MARLIN MOTORS", year: 2010, name: "Vivacite", variants: [] },
+    { brand: "MARLIN MOTORS", year: 2012, name: "Veloce", variants: [] },
+    { brand: "MARLIN MOTORS", year: 2014, name: "GT", variants: [] },
+    { brand: "MARLIN MOTORS", year: 2014, name: "Vivacite S", variants: [] },
+    { brand: "MARLIN MOTORS", year: 2016, name: "Velindre", variants: [] },
+    { brand: "MARLIN MOTORS", year: 2018, name: "Vivacite R", variants: [] },
+    { brand: "MARLIN MOTORS", year: 2020, name: "Vivacite E", variants: [] },
+    { brand: "MARLIN MOTORS", year: 2021, name: "Bristol", variants: [] },
+    { brand: "MARLIN MOTORS", year: 2021, name: "London", variants: [] },
+    // MAUNTLEY (3)
+    { brand: "MAUNTLEY", year: 2022, name: "Soarer", variants: [] },
+    { brand: "MAUNTLEY", year: 2022, name: "National GT", variants: [] },
+    { brand: "MAUNTLEY", year: 2022, name: "Windsor", variants: ["Speed", "Speed Duo-Tone"] },
+    // MAYFLOWER (1)
+    { brand: "MAYFLOWER", year: 1958, name: "Rage Roxanne", variants: [] },
+    // NAVARA (3)
+    { brand: "NAVARA", year: 2005, name: "Horizon GT-R Navmo Z-Tune", variants: [] },
+    { brand: "NAVARA", year: 2009, name: "Horizon", variants: [] },
+    { brand: "NAVARA", year: 2017, name: "Horizon", variants: [] },
+    // NVNA (1)
+    { brand: "NVNA", year: 2023, name: "Acesera", variants: [] },
+    // OVERLAND (3)
+    { brand: "OVERLAND", year: 2020, name: "Apache SFP", variants: [] },
+    { brand: "OVERLAND", year: 2020, name: "Apache SFP DOGG H1000", variants: [] },
+    { brand: "OVERLAND", year: 2021, name: "Combatant Ghoul 6x6", variants: [] },
+    // PAGANI (2)
+    { brand: "PAGANI", year: 2006, name: "Zonda", variants: [] },
+    { brand: "PAGANI", year: 2017, name: "Huayra", variants: [] },
+    // POLAR CUSTOMS (1)
+    { brand: "POLAR CUSTOMS", year: null, name: "SuperSleigh", variants: [] },
+    // RAMSEY (1)
+    { brand: "RAMSEY", year: 2015, name: "50", variants: [] },
+    // SALEEN (2)
+    { brand: "SALEEN", year: 2005, name: "S7 Twin Turbo", variants: [] },
+    { brand: "SALEEN", year: 2006, name: "S7 Twin Turbo Competition Package", variants: [] },
+    // SENTINEL (3)
+    { brand: "SENTINEL", year: 1998, name: "Parliament Limo", variants: [] },
+    { brand: "SENTINEL", year: 2007, name: "Parliament", variants: [] },
+    { brand: "SENTINEL", year: 2021, name: "Adventurer Limo", variants: [] },
+    // SHIZUOKA (2)
+    { brand: "SHIZUOKA", year: 2023, name: "Slick Spec-X Lunar New Year", variants: [] },
+    { brand: "SHIZUOKA", year: 2024, name: "Alliance Milwaukee Edition", variants: [] },
+    // SILHOUETTE (7)
+    { brand: "SILHOUETTE", year: 1986, name: "Attraente", variants: [] },
+    { brand: "SILHOUETTE", year: 1988, name: "Attraente", variants: [] },
+    { brand: "SILHOUETTE", year: 2011, name: "Gioisa", variants: [] },
+    { brand: "SILHOUETTE", year: 2011, name: "Gioiosa Spyder", variants: [] },
+    { brand: "SILHOUETTE", year: 2011, name: "Gioiosa Super Corsa Speciale", variants: [] },
+    { brand: "SILHOUETTE", year: 2023, name: "Rinoceronte", variants: [] },
+    { brand: "SILHOUETTE", year: 2024, name: "Tifon", variants: [] },
+    // SIMPLE (1)
+    { brand: "SIMPLE", year: 2023, name: "Atmos Sapphire", variants: [] },
+    // SIR RODGERS (8)
+    { brand: "SIR RODGERS", year: 2020, name: "Constellation", variants: [] },
+    { brand: "SIR RODGERS", year: 2020, name: "Shadow", variants: [] },
+    { brand: "SIR RODGERS", year: 2020, name: "Sunlight", variants: [] },
+    { brand: "SIR RODGERS", year: 2021, name: "Specter SWB", variants: [] },
+    { brand: "SIR RODGERS", year: 2021, name: "Specter LWB", variants: [] },
+    { brand: "SIR RODGERS", year: 2022, name: "Constellation", variants: [] },
+    { brand: "SIR RODGERS", year: 2024, name: "Appiration", variants: [] },
+    { brand: "SIR RODGERS", year: 2024, name: "Appiration K-Edition", variants: [] },
+    // STUTTGART (13)
+    { brand: "STUTTGART", year: 2007, name: "GT Surrey", variants: [] },
+    { brand: "STUTTGART", year: 2007, name: "GT Surrey 722", variants: [] },
+    { brand: "STUTTGART", year: 2014, name: "Sport Falke", variants: [] },
+    { brand: "STUTTGART", year: 2017, name: "Koblenz 63", variants: [] },
+    { brand: "STUTTGART", year: 2021, name: "Wilhelm Sondergeland", variants: [] },
+    { brand: "STUTTGART", year: 2021, name: "Vaihingen 63", variants: [] },
+    { brand: "STUTTGART", year: 2022, name: "Sindelfingen", variants: [] },
+    { brand: "STUTTGART", year: 2022, name: "ES 53", variants: [] },
+    { brand: "STUTTGART", year: 2023, name: "Sondergeland 63", variants: [] },
+    { brand: "STUTTGART", year: 2023, name: "Munster", variants: [] },
+    { brand: "STUTTGART", year: 2023, name: "Wilhelm Munster", variants: [] },
+    { brand: "STUTTGART", year: 2025, name: "E-Saloon", variants: [] },
+    { brand: "STUTTGART", year: 2025, name: "E-Saloon 053", variants: [] },
+    // SURREY (7)
+    { brand: "SURREY", year: 2012, name: "Renaissance", variants: [] },
+    { brand: "SURREY", year: 2016, name: "LT-500", variants: [] },
+    { brand: "SURREY", year: 2016, name: "Surrey LT-500", variants: [] },
+    { brand: "SURREY", year: 2016, name: "Surrey S-350", variants: [] },
+    { brand: "SURREY", year: 2020, name: "Speedlet", variants: [] },
+    { brand: "SURREY", year: 2021, name: "Grand Tourer", variants: [] },
+    { brand: "SURREY", year: 2023, name: "Ripon", variants: [] },
+    // TAKEO (1)
+    { brand: "TAKEO", year: 2023, name: "Takeo Experience", variants: [] },
+    // VISION (2)
+    { brand: "VISION", year: 2012, name: "Prima V8", variants: [] },
+    { brand: "VISION", year: 2023, name: "Praire Pre Runner", variants: [] },
+    // WAVE TRAVELLER (1)
+    { brand: "WAVE TRAVELLER", year: 2021, name: "Custom", variants: [] },
+    // WESTERN (7)
+    { brand: "WESTERN", year: null, name: "Hawk Go-Kart", variants: [] },
+    { brand: "WESTERN", year: null, name: "Lil' Kobold", variants: [] },
+    { brand: "WESTERN", year: 2021, name: "Sergal FR33DOM_RUN", variants: [] },
+    { brand: "WESTERN", year: 2022, name: "SYNTHTAUR", variants: [] },
+    { brand: "WESTERN", year: 2026, name: "Protogen", variants: ["E2MX-I Performo", "E2MX Performo", "XRh"] },
+    { brand: "WESTERN", year: 2026, name: "Protogen-X", variants: ["E2MX-I Performo", "E2MX Performo", "XRh"] },
+    { brand: "WESTERN", year: 2026, name: "Western Protobunny Easter Truck", variants: [] },
+    // WOLFSBURG (1)
+    { brand: "WOLFSBURG", year: 2007, name: "Pitch W12", variants: [] },
+    // WYNNE (1)
+    { brand: "WYNNE", year: 1981, name: "Model-12 Futureline", variants: [] },
+    // SIN MARCA (3)
+    { brand: "SIN MARCA", year: null, name: "Pumpkin Car", variants: [] },
+    { brand: "SIN MARCA", year: null, name: "Job Application", variants: [] },
+    { brand: "SIN MARCA", year: 2025, name: "Lawn-King G50X Super Bagger", variants: [] }
+  ];
+
+  let bannedVehicles = vehiclesData;
+  
+  // Verificar que sean 190
+  console.log(`Total de vehículos en lista: ${bannedVehicles.length}`);
+  
+  const brandsSet = new Set(bannedVehicles.map(v => v.brand));
+  const sortedBrands = Array.from(brandsSet).sort((a,b) => a.localeCompare(b));
+  
+  let currentBrand = "all";
+  let currentModelSearch = "";
+  let currentYear = "";
+
+  function filterVehicles() {
+    let filtered = [...bannedVehicles];
+    
+    if (currentBrand !== "all") {
+      filtered = filtered.filter(v => v.brand === currentBrand);
+    }
+    
+    if (currentModelSearch.trim() !== "") {
+      const searchTerm = currentModelSearch.trim().toLowerCase();
+      filtered = filtered.filter(v => {
+        if (v.name.toLowerCase().includes(searchTerm)) return true;
+        if (v.variants && v.variants.some(variant => variant.toLowerCase().includes(searchTerm))) return true;
+        return false;
+      });
+    }
+    
+    if (currentYear !== "" && !isNaN(parseInt(currentYear))) {
+      const yearNum = parseInt(currentYear, 10);
+      filtered = filtered.filter(v => v.year !== null && v.year === yearNum);
+    }
+    
+    return filtered;
+  }
+
+  function renderList() {
+    const filtered = filterVehicles();
+    
+    document.getElementById("resultCount").innerHTML = `${filtered.length} vehículo${filtered.length !== 1 ? 's' : ''} prohibido(s) · Total lista: ${bannedVehicles.length}`;
+    const container = document.getElementById("vehiclesContainer");
+    if (filtered.length === 0) {
+      container.innerHTML = `<div class="no-results">⛔ No hay coincidencias. Este vehículo no está en la lista negra o el filtro es muy estricto.</div>`;
+      return;
+    }
+    let html = "";
+    for (let v of filtered) {
+      const yearDisplay = v.year ? `<span class="vehicle-year">${v.year}</span>` : `<span class="vehicle-year" style="background:#2d1b3e;">Año ?</span>`;
+      
+      let variantsHtml = "";
+      if (v.variants && v.variants.length > 0) {
+        for (let variant of v.variants) {
+          variantsHtml += `<span class="vehicle-variant">${escapeHtml(variant)}</span>`;
+        }
+      }
+      
+      html += `
+        <div class="vehicle-card">
+          <div class="vehicle-brand">
+            <span>🚫 ${escapeHtml(v.brand)}</span>
+            <span class="ban-icon">PROHIBIDO</span>
+          </div>
+          <div class="vehicle-name">${escapeHtml(v.name)}</div>
+          <div class="tags-container">
+            ${yearDisplay}
+            ${variantsHtml}
+          </div>
+        </div>
+      `;
+    }
+    container.innerHTML = html;
+  }
+  
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+  
+  function populateBrandDropdown() {
+    const select = document.getElementById("brandFilter");
+    select.innerHTML = '<option value="all">🏁 Todas las marcas (orden alfabético)</option>';
+    for (let brand of sortedBrands) {
+      select.innerHTML += `<option value="${escapeHtml(brand)}">${escapeHtml(brand)}</option>`;
+    }
+  }
+  
+  function init() {
+    populateBrandDropdown();
+    renderList();
+    
+    const brandSelect = document.getElementById("brandFilter");
+    const modelInput = document.getElementById("modelSearch");
+    const yearInput = document.getElementById("yearFilter");
+    const resetBtn = document.getElementById("resetFilters");
+    
+    brandSelect.addEventListener("change", (e) => {
+      currentBrand = e.target.value;
+      renderList();
+    });
+    modelInput.addEventListener("input", (e) => {
+      currentModelSearch = e.target.value;
+      renderList();
+    });
+    yearInput.addEventListener("input", (e) => {
+      currentYear = e.target.value;
+      renderList();
+    });
+    resetBtn.addEventListener("click", () => {
+      brandSelect.value = "all";
+      modelInput.value = "";
+      yearInput.value = "";
+      currentBrand = "all";
+      currentModelSearch = "";
+      currentYear = "";
+      renderList();
+    });
+  }
+  
+  window.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
