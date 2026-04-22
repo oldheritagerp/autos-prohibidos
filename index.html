@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Old Heritage RP · Lista de Vehículos Prohibidos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #020617;
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Fondo con gradientes violeta original */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 20%, rgba(168,85,247,0.25), transparent 40%),
+                  radial-gradient(circle at 80% 30%, rgba(168,85,247,0.2), transparent 40%),
+                  radial-gradient(circle at 50% 80%, rgba(168,85,247,0.15), transparent 50%);
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    .app-container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* HERO: estructura flexible para el logo + textos */
+    .hero {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    /* Contenedor del logo */
+    .hero-logo {
+      flex-shrink: 0;
+      background: rgba(15, 23, 42, 0.4);
+      border-radius: 28px;
+      padding: 0.5rem;
+      backdrop-filter: blur(4px);
+      transition: transform 0.2s ease;
+    }
+    .hero-logo:hover {
+      transform: scale(1.02);
+    }
+    .logo-img {
+      display: block;
+      max-height: 70px;
+      width: auto;
+      border-radius: 20px;
+      filter: drop-shadow(0 4px 12px rgba(168,85,247,0.3));
+    }
+
+    /* Bloque de texto con la franja violeta original */
+    .hero-text {
+      border-left: 4px solid #a855f7;
+      padding-left: 1.2rem;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    h1 {
+      font-size: clamp(28px, 6vw, 48px);
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff, #c084fc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+      margin-bottom: 0.5rem;
+    }
+    .sub {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      border-left: 1px solid rgba(168,85,247,0.4);
+      padding-left: 1rem;
+      margin-left: 0rem;
+    }
+
+    /* panel de búsqueda estilo original */
+    .search-panel {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 32px;
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      align-items: flex-end;
+    }
+    .filter-group {
+      flex: 1;
+      min-width: 180px;
+    }
+    .filter-group label {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      color: #a855f7;
+      margin-bottom: 0.4rem;
+    }
+    .filter-group select, .filter-group input {
+      width: 100%;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(168,85,247,0.4);
+      border-radius: 20px;
+      padding: 0.7rem 1rem;
+      color: #f1f5f9;
+      font-family: 'Inter', monospace;
+      font-size: 0.9rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    .filter-group select:focus, .filter-group input:focus {
+      border-color: #c084fc;
+      box-shadow: 0 0 6px rgba(168,85,247,0.6);
+    }
+    .reset-btn {
+      background: rgba(168,85,247,0.2);
+      border: 1px solid #a855f7;
+      border-radius: 40px;
+      padding: 0.7rem 1.6rem;
+      font-weight: 600;
+      color: #c084fc;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.85rem;
+      height: fit-content;
+    }
+    .reset-btn:hover {
+      background: #a855f7;
+      color: #0f0f1f;
+      border-color: #a855f7;
+      box-shadow: 0 0 10px #a855f7;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      margin-bottom: 1.2rem;
+      padding: 0 0.5rem;
+    }
+    .count-badge {
+      background: rgba(168,85,247,0.25);
+      border-radius: 40px;
+      padding: 0.3rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #c084fc;
+    }
+    .ban-icon {
+      background: #2d1b3e;
+      border-radius: 20px;
+      padding: 0.2rem 0.7rem;
+      font-size: 0.7rem;
+      font-weight: bold;
+      color: #c084fc;
+      border: 1px solid #a855f7;
+    }
+
+    .vehicle-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+    }
+    .vehicle-card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 28px;
+      padding: 1.2rem 1.4rem;
+      transition: all 0.25s ease;
+      border-left: 4px solid #a855f7;
+    }
+    .vehicle-card:hover {
+      transform: translateY(-4px);
+      background: rgba(30, 41, 59, 0.7);
+      box-shadow: 0 20px 25px -12px rgba(0,0,0,0.5);
+      border-left-width: 5px;
+    }
+    .vehicle-brand {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+      color: #a855f7;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .vehicle-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      word-break: break-word;
+      margin-bottom: 0.6rem;
+      line-height: 1.3;
+    }
+    .vehicle-year {
+      display: inline-block;
+      background: rgba(168,85,247,0.2);
+      border-radius: 40px;
+      padding: 0.2rem 0.8rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #d9b4ff;
+    }
+    .no-results {
+      text-align: center;
+      padding: 3rem;
+      background: rgba(0,0,0,0.3);
+      border-radius: 40px;
+      color: #94a3b8;
+      font-style: italic;
+      border: 1px dashed #a855f7;
+    }
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #475569;
+      border-top: 1px solid rgba(168,85,247,0.3);
+      padding-top: 1.5rem;
+    }
+    @media (max-width: 700px) {
+      .app-container { padding: 1rem; }
+      .hero {
+        justify-content: center;
+        text-align: center;
+      }
+      .hero-text {
+        text-align: left;
+      }
+      .search-panel { flex-direction: column; align-items: stretch; }
+      .reset-btn { align-self: center; width: fit-content; }
+      .vehicle-grid { grid-template-columns: 1fr; }
+      .logo-img { max-height: 55px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <div class="hero">
+    <!-- Logo integrado: icono.png -->
+    <div class="hero-logo">
+      <img src="icono.png" alt="Old Heritage RP - Logo oficial" class="logo-img" onerror="this.style.opacity='0.5'; this.alt='Logo no encontrado';">
+    </div>
+    <div class="hero-text">
+      <h1>⛔ LISTA DE VEHÍCULOS PROHIBIDOS</h1>
+      <div class="sub">Old Heritage RP · Modelos baneados oficialmente</div>
+    </div>
+  </div>
+
+  <div class="search-panel">
+    <div class="filter-group">
+      <label>🏭 MARCA</label>
+      <select id="brandFilter">
+        <option value="all">Todas las marcas (orden alfabético)</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>🔍 MODELO (texto)</label>
+      <input type="text" id="modelSearch" placeholder="Ej: R8, Determinator, Chiave..." autocomplete="off">
+    </div>
+    <div class="filter-group">
+      <label>📅 AÑO EXACTO</label>
+      <input type="number" id="yearFilter" placeholder="Ej: 2023" step="1" min="1900" max="2030">
+    </div>
+    <button class="reset-btn" id="resetFilters">⟳ Limpiar filtros</button>
+  </div>
+
+  <div class="stats">
+    <span class="count-badge" id="resultCount">Cargando...</span>
+    <span class="count-badge"><span class="ban-icon">PROHIBIDO</span> · Lista oficial</span>
+  </div>
+
+  <div id="vehiclesContainer" class="vehicle-grid">
+    <div class="no-results">Cargando lista negra...</div>
+  </div>
+  <footer>© Old Heritage RP — Estos vehículos tienen prohibida su circulación. Cualquier uso conlleva sanciones administrativas.</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // LISTA DEFINITIVA DE COCHES PROHIBIDOS (proporcionada por el usuario)
+  // Se ha formateado respetando cada línea con año y modelo.
+  // --------------------------------------------------------------
+  const BAN_LIST_RAW = `
+ARROW
+1988 Phoenix Dimensional Traveler
+
+AUDI
+2021 R8 V10 Spyder
+2024 RS 7
+2025 RS 6 AVANT
+2025 RS Q8
+
+BANDIT
+2023 Advance Beast Rawr Taur 6X6
+2023 Advance Beast Rawr Baja
+2023 Advance Bellco SS
+2023 Advance Bellco 800
+2023 Advance Bellco 800 SS
+
+BARCHETTA
+2022 Chiave (Trofeo, Trofeo Champ, Modena S)
+2023 Corsica
+
+BAYRO
+1981 W10
+2007 Hofmeister M (M Touring (EU))
+2018 Regen M (Competitive)
+2020 Hofmeister M (M Competitive)
+2020 Series 30 'Teenage Dream'
+2021 Donner M Convertible
+2021 Donner M Coupe
+2021 Regen M
+2021 Gottfrieding (AWD 6.6TT M Performance, AWD 6.6TT M Performance Shadow Edition) / 2021 W30
+2021 W30 Wagon
+2022 W40
+2022 Hofmeister M (M Competitive, M Competitive Sport)
+2023 Regen M Touring
+2024 eWX
+2024 e70
+2024 W70
+2025 Y50 W
+2025 Y60 W
+
+BULLHORN
+1969 Canaveral Champion
+1969 Prancer (Canaveral)
+2008 Python
+2017 SFP Python
+2018 Buffalo SFP-10
+2018 Buffalo SFP-1750TT
+2021 Determinator (SFP Blackjack, SFP Fury, SFP Blackjack Widebody, SFP Fury Widebody) / 2021 Pueblo SFP
+2022 Buffalo T-Wex
+2022 Buffalo K-Wex
+2023 Prancer (SFP Blackjack Widebody, SFP Fury Widebody, SFP Fury, SPF Fury Redeye, BlackJack WideBody)
+2023 Determinator (SFP Fury, SFP Fury Widebody, Super Stock, SFP Fury Redeye, SFP Fury Redeye Widebody, Nightmare)
+2023 Determinator 170
+
+CELESTIAL
+2021 Type-5 (Plaid, Plaid+)
+2021 Type-7 (Plaid)
+2022 Type-7 (Surge, Surge (Ivy))
+2022 Type-5 (Surge)
+2022 Type-5 'Reactive Series'
+2023 FCT
+2023 Type-1
+2025 Type-FT FX-Edition
+2025 Type-5 (Surge, Surge (Track Pack))
+2025 Type-7 (Surge (Ivy), Surge)
+
+CENTURY
+2023 Activa 600
+2023 Nebula 500 (500 Track Package, 500 Carbon Package)
+
+CHEVLON
+2002 Corbeta (Z06, Tigershark)
+2017 Guardian (SS Oppressor)
+2019 Corbeta (Manta TZ, Manta RS)
+2021 Arrojo (TZ, TZR)
+2023 Corbeta Manta
+2023 Corbeta Manta HEEN
+2023 Corbeta Manta Z06
+2024 Corbeta Manta t-Hay
+
+CHIARA
+1962 Chiara Berlinetta GT
+2024 Chiara Vincenzo
+2024 Chiara 006
+
+COLIN
+2024 Commander
+
+DOGG
+2019 Manta H1000
+2023 Amigo DOGG D1000
+
+DURANT
+2019 Manta
+2019 H1300
+2020 Voyager
+2023 Amigo (Sport R, TL1, TZ, TZR)
+
+EEEZEE
+2008 Ziggy
+
+ELEKTRISK
+2025 Pluto
+
+FALCON
+2005 Heritage
+2017 Stallion (Bellco GT350, GT350R)
+2024 Stallion (Darkhorse)
+
+FERDINAND
+2006 Ultima
+2007 Ultima
+2017 Rapido
+2022 Rapido GT3
+2022 Rapido Coupe
+2023 Snapper
+2023 Snapper GT4
+2023 Vivo (Advance Plus (EU), Performance Plus, GS, etc.)
+2023 Vivo CrossWagen
+2023 Vivo GranWagen
+
+FOX MOUNTAIN
+Motor Ranger
+SLK-6789
+Vertex
+
+GLOBE
+1996 City AeroPod
+1996 City MegaCity Super Limo 2000
+
+IDEA
+2015 Twofer Milkjug
+
+JAGUAR
+Jaguar KK
+Jaguar XF
+Jaguar XJ220
+
+LAWN-KING
+2014 G50X
+
+LELAND
+2019 Leland LCS-V
+2023 LTS5 V (V-Series Blackwing variants)
+2023 LTS5 V HEEN H1000
+
+LOTUS
+2020 Evora
+2024 Emira
+
+MARLIN MOTORS
+2010 GTS
+2010 Vivacite
+2012 Veloce
+2014 GT
+2014 Vivacite S
+2016 Velindre
+2018 Vivacite R
+2020 Vivacite E
+2021 Bristol
+2021 London
+
+MAUNTLEY
+2022 Soarer
+2022 National GT
+2022 Windsor (Speed, Speed Duo-Tone)
+
+MAYFLOWER
+1958 Rage Roxanne
+
+NAVARA
+2005 Horizon GT-R Navmo Z-Tune
+2009 Horizon
+2017 Horizon
+
+NVNA
+2023 Acesera
+
+OVERLAND
+2020 Apache SFP
+2020 Apache SFP DOGG H1000
+2021 Combatant Ghoul 6x6
+
+PAGANI
+2006 Zonda
+2017 Huayra
+
+POLAR CUSTOMS
+SuperSleigh
+
+RAMSEY
+2015 50
+
+SALEEN
+2005 S7 Twin Turbo
+2006 S7 Twin Turbo Competition Package
+
+SENTINEL
+1998 Parliament Limo
+2007 Parliament
+2021 Adventurer Limo
+
+SHIZUOKA
+2023 Slick Spec-X Lunar New Year
+2024 Alliance Milwaukee Edition
+
+SILHOUETTE
+1986 Attraente
+1988 Attraente
+2011 Gioisa
+2011 Gioiosa Spyder
+2011 Gioiosa Super Corsa Speciale
+2023 Rinoceronte
+2024 Tifon
+
+SIMPLE
+2023 Atmos Sapphire
+
+SIR RODGERS
+2020 Constellation
+2020 Shadow
+2020 Sunlight
+2021 Specter SWB
+2021 Specter LWB
+2022 Constellation
+2024 Appiration
+2024 Appiration K-Edition
+
+STUTTGART
+2007 GT Surrey
+2007 GT Surrey 722
+2014 Sport Falke
+2017 Koblenz 63
+2021 Wilhelm Sondergeland
+2021 Vaihingen 63
+2022 Sindelfingen
+2022 ES 53
+2023 Sondergeland 63
+2023 Munster
+2023 Wilhelm Munster
+2025 E-Saloon
+2025 E-Saloon 053
+
+SURREY
+2012 Renaissance
+2016 LT-500
+2016 Surrey LT-500
+2016 Surrey S-350
+2020 Speedlet
+2021 Grand Tourer
+2023 Ripon
+
+TAKEO
+2023 Takeo Experience
+
+VISION
+2012 Prima V8
+2023 Praire Pre Runner
+
+WAVE TRAVELLER
+2021 Custom
+
+WESTERN
+Hawk Go-Kart
+Lil' Kobold
+2021 Sergal FR33DOM_RUN
+2022 SYNTHTAUR
+2026 Protogen (E2MX-I Performo, E2MX Performo, XRh)
+2026 Protogen-X (E2MX-I Performo, E2MX Performo, XRh)
+2026 Western Protobunny Easter Truck
+
+WOLFSBURG
+2007 Pitch W12
+
+WYNNE
+1981 Model-12 Futureline
+
+SIN MARCA
+Pumpkin Car
+Job Application
+Lawn-King G50X Super Bagger 2025
+`;
+
+  // ---------- PARSER específico para esta lista (línea por línea) ----------
+  function parseBanList(raw) {
+    const lines = raw.split(/\r?\n/);
+    const vehicles = [];
+    let currentBrand = null;
+
+    for (let i = 0; i < lines.length; i++) {
+      let line = lines[i].trim();
+      if (line === "") continue;
+
+      const isYearStart = /^\d{4}\s/.test(line);
+      if (!isYearStart && !line.match(/^\d{4}/) && (currentBrand === null || /^[A-Z\s]+$/.test(line) && !/\d/.test(line) && line.length > 1)) {
+        // Es una nueva marca (línea sin dígitos o completamente en mayúsculas)
+        currentBrand = line;
+      } else {
+        if (currentBrand !== null) {
+          const parsed = parseModelLine(line, currentBrand);
+          if (parsed) vehicles.push(parsed);
+        }
+      }
+    }
+
+    function parseModelLine(line, brand) {
+      line = line.trim();
+      const yearMatch = line.match(/^(\d{4})\s+(.*)/);
+      if (yearMatch) {
+        let year = parseInt(yearMatch[1], 10);
+        let modelName = yearMatch[2].trim();
+        modelName = modelName.replace(/^[-–—]\s*/, '');
+        return { brand: brand, year: year, name: modelName };
+      } else {
+        if (line.length > 0) {
+          return { brand: brand, year: null, name: line };
+        }
+      }
+      return null;
+    }
+
+    // Post-procesamiento: extraer años al final para modelos como "Lawn-King G50X Super Bagger 2025"
+    for (let v of vehicles) {
+      if (v.year === null && v.name) {
+        const yearAtEnd = v.name.match(/(\d{4})$/);
+        if (yearAtEnd) {
+          v.year = parseInt(yearAtEnd[1], 10);
+          v.name = v.name.replace(/\s*\d{4}$/, '').trim();
+        }
+      }
+    }
+    return vehicles;
+  }
+
+  let bannedVehicles = parseBanList(BAN_LIST_RAW);
+  
+  // Agregar manualmente si falta algún modelo especial
+  const hasLawnKing = bannedVehicles.some(v => v.brand === "SIN MARCA" && v.name.includes("Lawn-King G50X Super Bagger"));
+  if (!hasLawnKing) {
+    bannedVehicles.push({
+      brand: "SIN MARCA",
+      year: 2025,
+      name: "Lawn-King G50X Super Bagger"
+    });
+  }
+  
+  // Eliminar duplicados exactos
+  const uniqueMap = new Map();
+  for (let v of bannedVehicles) {
+    const key = `${v.brand}|${v.year ?? 'null'}|${v.name}`;
+    if (!uniqueMap.has(key)) uniqueMap.set(key, v);
+  }
+  bannedVehicles = Array.from(uniqueMap.values());
+
+  // Ordenar marcas alfabéticamente
+  const brandsSet = new Set(bannedVehicles.map(v => v.brand));
+  const sortedBrands = Array.from(brandsSet).sort((a,b) => a.localeCompare(b));
+  
+  // Variables de filtro
+  let currentBrand = "all";
+  let currentModelSearch = "";
+  let currentYear = "";
+
+  function renderList() {
+    let filtered = [...bannedVehicles];
+    if (currentBrand !== "all") {
+      filtered = filtered.filter(v => v.brand === currentBrand);
+    }
+    if (currentModelSearch.trim() !== "") {
+      const searchTerm = currentModelSearch.trim().toLowerCase();
+      filtered = filtered.filter(v => v.name.toLowerCase().includes(searchTerm));
+    }
+    if (currentYear !== "" && !isNaN(parseInt(currentYear))) {
+      const yearNum = parseInt(currentYear, 10);
+      filtered = filtered.filter(v => v.year !== null && v.year === yearNum);
+    }
+    
+    document.getElementById("resultCount").innerHTML = `${filtered.length} vehículo${filtered.length !== 1 ? 's' : ''} prohibido(s)`;
+    const container = document.getElementById("vehiclesContainer");
+    if (filtered.length === 0) {
+      container.innerHTML = `<div class="no-results">⛔ No hay coincidencias. Este vehículo no está en la lista negra o el filtro es muy estricto.</div>`;
+      return;
+    }
+    let html = "";
+    for (let v of filtered) {
+      const yearDisplay = v.year ? `<span class="vehicle-year">${v.year}</span>` : `<span class="vehicle-year" style="background:#2d1b3e;">Año ?</span>`;
+      html += `
+        <div class="vehicle-card">
+          <div class="vehicle-brand">
+            <span>🚫 ${escapeHtml(v.brand)}</span>
+            <span class="ban-icon">PROHIBIDO</span>
+          </div>
+          <div class="vehicle-name">${escapeHtml(v.name)}</div>
+          ${yearDisplay}
+        </div>
+      `;
+    }
+    container.innerHTML = html;
+  }
+  
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+  
+  function populateBrandDropdown() {
+    const select = document.getElementById("brandFilter");
+    select.innerHTML = '<option value="all">🏁 Todas las marcas (orden alfabético)</option>';
+    for (let brand of sortedBrands) {
+      select.innerHTML += `<option value="${escapeHtml(brand)}">${escapeHtml(brand)}</option>`;
+    }
+  }
+  
+  function init() {
+    populateBrandDropdown();
+    renderList();
+    
+    const brandSelect = document.getElementById("brandFilter");
+    const modelInput = document.getElementById("modelSearch");
+    const yearInput = document.getElementById("yearFilter");
+    const resetBtn = document.getElementById("resetFilters");
+    
+    brandSelect.addEventListener("change", (e) => {
+      currentBrand = e.target.value;
+      renderList();
+    });
+    modelInput.addEventListener("input", (e) => {
+      currentModelSearch = e.target.value;
+      renderList();
+    });
+    yearInput.addEventListener("input", (e) => {
+      currentYear = e.target.value;
+      renderList();
+    });
+    resetBtn.addEventListener("click", () => {
+      brandSelect.value = "all";
+      modelInput.value = "";
+      yearInput.value = "";
+      currentBrand = "all";
+      currentModelSearch = "";
+      currentYear = "";
+      renderList();
+    });
+  }
+  
+  window.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
